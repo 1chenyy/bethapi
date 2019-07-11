@@ -1,12 +1,12 @@
 package net
 
 const (
-	key_1 = "QMIGUVHKYB1XSTHXQ7UXCSJ8M9K7GBFIJE"
-	key_2 = "MM7JQYHR4UTYQVPWKTF1QPXZYWD8B3947Y"
-	key_3 = "DRVYICXS84A2328KAGGCQ3R41U4EJT8Z95"
-	key_4 = "ICGS6JVIX3JJKURQZB2IWFR23SZSZCDVF9" //myregeth
+	key_1 = "YourApiKeyToken"
+	key_2 = "YourApiKeyToken"
+	key_3 = "YourApiKeyToken"
+	key_4 = "YourApiKeyToken" //myregeth
 
-	PriceKey = "2a30e5cc2e44d10602bc7993fb0b0567755a37f8858fd249133a9c6d28746ccd"
+	PriceKey = ""
 
 	GetBlockNumberUrl = "https://api.etherscan.io/api?module=proxy&action=eth_blockNumber&apikey="+key_1
 
@@ -25,7 +25,7 @@ const (
 	INPUT_ERROR_RESPONSE   = `{"status":0,"result":{},"error":"input error"}`
 	NO_DATA_ERROR_RESPONSE = `{"status":0,"result":{},"error":"no data"}`
 
-	RPC_URL = "http://10.166.33.85:8546"
+	RPC_URL = "http://127.0.0.1:8545"
 
 	ERROR_DB = "db error"
 )
