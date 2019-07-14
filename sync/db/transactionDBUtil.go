@@ -4,6 +4,7 @@ import (
 	"bethapi/models"
 	"bethapi/util"
 	"encoding/json"
+	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
 	"github.com/syndtr/goleveldb/leveldb"
 	"io/ioutil"
@@ -28,12 +29,17 @@ type TransactionDB struct {
 }
 
 func NewTransactionDBUtil()*TransactionDB {
-	return &TransactionDB{Lvdb: CreateTransactionDB(),
+	db:=&TransactionDB{Lvdb: CreateTransactionDB(),
 		DBCh:make(chan TransactionValue,1000),
 		Count:0,
 		StartCh:make(chan int64),
 		StopTrace:false,
 	}
+	isRestart,err:=beego.AppConfig.Bool("restart")
+	if err == nil && isRestart {
+		db.Lvdb.Put([]byte(time.Now().String()[:10]),util.Int64ToBytes(0),nil)
+	}
+	return db
 }
 
 func CreateTransactionDB()*leveldb.DB{
@@ -85,10 +91,26 @@ func (u *TransactionDB)StartTrace(stop <-chan struct{},wg *sync.WaitGroup){
 }
 
 func (u TransactionDB)TraceBlocks(divide int64){
-	for i:=divide-100000;i<divide && !u.StopTrace;i++ {
+	isRestart,err:=beego.AppConfig.Bool("restart")
+	if err!=nil {
+		isRestart = false;
+	}
+	start:=int64(0)
+	if isRestart {
+		start = 7200
+	}else{
+		start = 100000
+	}
+	today:=time.Now().String()[:10]
+	for i:=divide-start;i<divide && !u.StopTrace;i++ {
 		localblock:=u.GetLocalBlockByNumber(i)
+		blockTime := time.Unix(util.HexToDec(localblock.Timestamp),0).String()[:10]
+		if isRestart && blockTime!=today {
+			logs.Debug("跳过区块：",localblock.Number)
+			continue
+		}
 		value:=TransactionValue{}
-		value.Time = []byte(time.Unix(util.HexToDec(localblock.Timestamp),0).String()[:10])
+		value.Time = []byte(blockTime)
 		value.Num = int64(len(localblock.Transactions))
 		u.DBCh<-value
 	}

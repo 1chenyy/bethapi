@@ -2,7 +2,6 @@ package net
 
 import (
 	"bethapi/sync/db"
-	"github.com/astaxie/beego/logs"
 	"sync"
 	"time"
 )
@@ -27,7 +26,6 @@ func StartQuery(ch chan<- int64,stop <-chan struct{},wg *sync.WaitGroup,price *d
 func GetAndSendLatestMsg(ch chan<- int64){
 	i:=GetLatestBlock()
 	if i != -1 {
-		logs.Debug("Query：查询到最新区块：",i)
 		ch<-i
 	}
 }

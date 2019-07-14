@@ -33,7 +33,9 @@ func GetLatestBlock()int64{
 		logs.Warn("GetBlockNumber UnmarshalError:",err)
 		return -1
 	}
-	return util.HexToDec(result.Result)
+	num:=util.HexToDec(result.Result)
+	logs.Debug("Query：查询到最新区块：",num,"(",result.Result,")")
+	return num
 }
 
 var GetBlockClient = &http.Client{Timeout:time.Second*90}

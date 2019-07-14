@@ -13,7 +13,7 @@ import (
 var asyncNum = 5
 
 func StartSync(blockDB *db.BlockDB,transactionDB *db.TransactionDB,priceDB *db.PriceDBUtil){
-	queryCh := make(chan int64)
+	queryCh := make(chan int64,1)
 	var wg sync.WaitGroup
 	stopSign := make(chan os.Signal, 1)
 	signal.Notify(stopSign, syscall.SIGINT)
